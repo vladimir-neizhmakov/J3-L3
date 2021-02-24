@@ -41,10 +41,16 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    @PostMapping("/update/{id}")
-    public String updateProduct(@PathVariable int id, @ModelAttribute Product product) {
-        System.out.println(id + product.getTitle()+product.getCost());
-     //   productService.getProductRepository().addProduct(product);
-        return "redirect:/products";
+    @GetMapping("/update/{id}")
+    public String showEditForm(@PathVariable int id, Model model) {
+        model.addAttribute("product", productService.getProductRepository().getProducts().get(productService.getProductRepository().getListID(id)));
+        return "edit_product_form";
     }
+
+    @PostMapping("/update")
+    public String updateProduct(@ModelAttribute(name = "id") int id, @ModelAttribute(name = "title") String title, @ModelAttribute(name = "cost") int cost) {
+        productService.getProductRepository().updateProduct(productService.getProductRepository().getListID(id), title, cost);
+        return "redirect:/products/";
+    }
+
 }
